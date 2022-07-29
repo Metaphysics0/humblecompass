@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:humblecompass/src/features/category_picker/presentation/picker.dart';
 import 'package:humblecompass/src/features/category_picker/presentation/picker_label.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
