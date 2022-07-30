@@ -1,26 +1,16 @@
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:humblecompass/src/features/target_location/data/target_location.dart';
 
-// final targetResultsProvider =
-//     StateNotifierProvider<CategorySelector, Category>((ref) {
-//   return CategorySelector(ref);
-// });
+final targetLocationProvider =
+    StateNotifierProvider<TargetLocationNotifier, TargetLocation?>((ref) {
+  return TargetLocationNotifier(ref);
+});
 
-// class CategorySelector extends StateNotifier<Category> {
-//   CategorySelector(this.ref)
-//       : super(AVAILABLE_CATEGORIES[INITIAL_SELECTED_CATEGORY_INDEX]);
+class TargetLocationNotifier extends StateNotifier<TargetLocation?> {
+  TargetLocationNotifier(this.ref) : super(null);
+  Ref ref;
 
-//   Ref ref;
-
-//   storeResults(Category category) async {
-//     final userPosition = ref.watch(userPositionProvider);
-
-//     final List<SearchResult>? targetResults = await fetchTargetLocation(
-//       userPosition,
-//       category.id,
-//       category.searchText,
-//     );
-
-//     print("RESULTS FROM FETCH_TARGET_LOCATION: $targetResults");
-//     state = category;
-//   }
-// }
+  setTargetLocation(TargetLocation? location) {
+    state = location;
+  }
+}

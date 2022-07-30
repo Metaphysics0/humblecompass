@@ -3,10 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/category_picker/presentation/picker.dart';
-import 'package:humblecompass/src/features/enable_location_services/application/ensure_user_has_location_enabled.dart';
-import 'package:humblecompass/src/features/enable_location_services/application/get_user_location.dart';
-import 'package:humblecompass/src/features/enable_location_services/data/user_location.dart';
 import 'package:humblecompass/src/features/target_location/presentation/target_location_text.dart';
+import 'package:humblecompass/src/features/user_location/application/ensure_user_has_location_enabled.dart';
+import 'package:humblecompass/src/features/user_location/application/user_location_provider.dart';
+import 'package:humblecompass/src/features/user_location/data/user_location.dart';
 
 Future main() async {
   await dotenv.load();
@@ -38,8 +38,8 @@ class HomePage extends ConsumerState<HomePageState> {
       final hasLocationEnabled = await ensureUserHasLocationEnabled();
 
       if (hasLocationEnabled) {
-        final Position position = await getPosition();
-        ref.read(userPositionProvider.notifier).setPosition(position);
+        final Position? currentPosition = await getCurrentPosition();
+        print("CURRENT POSITION: $currentPosition");
       }
     });
   }

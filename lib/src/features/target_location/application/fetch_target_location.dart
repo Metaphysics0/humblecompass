@@ -1,32 +1,30 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 import 'package:humblecompass/src/features/category_picker/domain/category.dart';
-import 'package:humblecompass/src/features/target_location/data/google_api.dart';
-import 'package:humblecompass/src/utils/future_helper.dart';
+import 'package:humblecompass/src/features/target_location/data/target_location.dart';
+import 'package:humblecompass/src/features/target_location/domain/google_api.dart';
 
-Future<NearBySearchResponse?> fetchTargetLocation(
-  Position? userPosition,
-  Category category,
+Future<TargetLocation?> fetchTargetLocation(
+  Position userPosition,
+  Category targetCategory,
 ) async {
-  if (userPosition == null) return null;
+  final targetLocation = await GoogleApi().fetchTargetLocation(
+    userPosition,
+    targetCategory,
+  );
 
-  try {
-    final NearBySearchResponse? response =
-        await googlePlace.search.getNearBySearch(
-      Location(
-        lat: userPosition.latitude,
-        lng: userPosition.longitude,
-      ),
-      500, // radius
-      type: category.searchType,
-      keyword: category.searchText,
-      rankby: RankBy.Distance,
-      opennow: true,
-    );
+  return _formatTargetLocation(targetLocation);
+}
 
-    return response;
-  } catch (e) {
-    futureHelper.throwError(e.toString());
-    return null;
-  }
+TargetLocation? _formatTargetLocation(SearchResult? result) {
+  if (result == null) return null;
+
+  return TargetLocation(
+    longitude: result.geometry?.location?.lng,
+    latitude: result.geometry?.location?.lat,
+    name: result.name,
+    address: result.formattedAddress,
+    priceLevel: result.priceLevel,
+    rating: result.userRatingsTotal,
+  );
 }

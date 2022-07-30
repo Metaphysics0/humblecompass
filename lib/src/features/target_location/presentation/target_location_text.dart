@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:humblecompass/src/features/category_picker/application/selected_category_provider.dart';
-import 'package:humblecompass/src/features/enable_location_services/application/get_user_location.dart';
+import 'package:humblecompass/src/features/user_location/application/user_location_provider.dart';
 import 'package:humblecompass/src/styles/text_styles.dart';
 
 class TargetLocationText extends ConsumerWidget {
@@ -10,8 +10,14 @@ class TargetLocationText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userLocation = ref.read(userPositionProvider.notifier);
-    if (userLocation == null) return _enableLocationServicesText(ref);
+    AsyncValue<String?> userLocation = ref.watch(userPositionProvider);
+
+    return userLocation.when(
+      data: (pos) => Text(pos!),
+      error: (err, stack) => Text('Error: $err'),
+      loading: () => _searchText(ref),
+    );
+    // if (userLocation == null) return _enableLocationServicesText(ref);
 
     return false ? _searchText(ref) : _foundText(ref);
   }
@@ -30,16 +36,12 @@ AnimatedTextKit _searchText(WidgetRef ref) {
   );
 }
 
-Text _foundText(WidgetRef ref) {
-  return Text(
-    "Found a nearby ${ref.watch(categoryProvider).searchText.toLowerCase()}!",
-    style: textStyles.search,
-  );
-}
+Text _foundText(WidgetRef ref) => Text(
+      "Found a nearby ${ref.watch(categoryProvider).searchText.toLowerCase()}!",
+      style: textStyles.search,
+    );
 
-Text _enableLocationServicesText(WidgetRef ref) {
-  return Text(
-    "Enable location services to find nearby ${ref.watch(categoryProvider).searchText.toLowerCase()}!",
-    style: textStyles.search,
-  );
-}
+Text _enableLocationServicesText(WidgetRef ref) => Text(
+      "Enable location services to find nearby ${ref.watch(categoryProvider).searchText.toLowerCase()}!",
+      style: textStyles.search,
+    );

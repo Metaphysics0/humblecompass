@@ -6,7 +6,7 @@ import 'package:humblecompass/src/features/category_picker/data/categories.dart'
 
 // ignore: must_be_immutable
 class Picker extends ConsumerWidget {
-  Picker({Key? key}) : super(key: key);
+  const Picker({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

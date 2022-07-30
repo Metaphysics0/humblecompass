@@ -4,3 +4,5 @@ class UserLocationErrors {
   final permanatelyDenied =
       'Location permissions are permanently denied, we cannot request permissions.';
 }
+
+final userLocationErrors = UserLocationErrors();
