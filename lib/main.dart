@@ -31,20 +31,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  LocationData? _userLocation;
-
+  UserLocation userLocation = UserLocation();
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _asyncMethod();
+      ensureUserHasLocationEnabled();
     });
-  }
-
-  _asyncMethod() async {
-    await UserLocation().determinePosition();
-    // print("isEnabled: $position");
   }
 
   @override

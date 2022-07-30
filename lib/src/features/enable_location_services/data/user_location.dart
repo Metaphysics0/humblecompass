@@ -1,34 +1,44 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/enable_location_services/domain/user_location_errors.dart';
+import 'package:humblecompass/src/utils/future_helper.dart';
 
 class UserLocation {
-  Future<Object?> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    UserLocationErrors userLocationErrors = UserLocationErrors();
+  UserLocationErrors errors = UserLocationErrors();
+  FutureHelper futureHelper = FutureHelper();
 
-    serviceEnabled = await _isLocationEnabled();
+  Future<Position?> determinePosition() async {
+    return await Geolocator.getLastKnownPosition();
+  }
 
-    if (!serviceEnabled) return userLocationErrors.disabledPermissions;
+  Future<Future<Error?>?> ensureLocationIsEnabled() async {
+    await _checkIfLocationIsEnabled();
+    await _askForLocationPermissionsIfNeeded();
 
-    permission = await Geolocator.checkPermission();
+    return null;
+  }
+
+  // ignore: body_might_complete_normally_nullable
+  Future<bool?> _checkIfLocationIsEnabled() async {
+    final isEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isEnabled) {
+      futureHelper.throwError(errors.disabledPermissions);
+    }
+  }
+
+  // ignore: body_might_complete_normally_nullable
+  Future<bool?> _askForLocationPermissionsIfNeeded() async {
+    var permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
 
       if (permission == LocationPermission.denied) {
-        return userLocationErrors.deniedPermissions;
+        futureHelper.throwError(errors.deniedPermissions);
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return userLocationErrors.permanatelyDeniedPermissions;
+      futureHelper.throwError(errors.permanatelyDeniedPermissions);
     }
-
-    return await Geolocator.getLastKnownPosition();
-  }
-
-  Future<bool> _isLocationEnabled() async {
-    return await Geolocator.isLocationServiceEnabled();
   }
 }

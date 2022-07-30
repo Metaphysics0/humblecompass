@@ -2,6 +2,7 @@ import 'package:humblecompass/src/features/enable_location_services/data/user_lo
 
 UserLocation userLocation = UserLocation();
 
-getPosition() async {
-  await userLocation.determinePosition();
-}
+getPosition() async => await userLocation.determinePosition();
+
+ensureUserHasLocationEnabled() async =>
+    await userLocation.ensureLocationIsEnabled();
