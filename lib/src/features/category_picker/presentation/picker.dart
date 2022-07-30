@@ -21,8 +21,14 @@ class _PickerState extends State<Picker> {
         onSelectedItemChanged: (int selectedItem) {
           print("SELECTED ITEM $selectedItem");
         },
-        children: categoryList,
+        children: categoryList(),
       ),
     );
   }
 }
+
+List<Widget> categoryList() =>
+    List<Widget>.generate(AVAILABLE_CATEGORIES.length, (int index) {
+      final category = AVAILABLE_CATEGORIES[index];
+      return Text(category.name);
+    });
