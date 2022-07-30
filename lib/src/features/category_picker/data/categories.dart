@@ -3,9 +3,34 @@ import 'package:humblecompass/src/features/category_picker/domain/category.dart'
 
 // ignore: non_constant_identifier_names
 final List<cat.Category> AVAILABLE_CATEGORIES = [
-  cat.Category(id: "vegan", name: "Vegan 🌱"),
-  cat.Category(id: "coffee", name: "Coffee Shops ☕️"),
-  cat.Category(id: "coworking_spaces", name: "Coworking Spaces 👨🏻‍💻"),
-  cat.Category(id: "dance", name: "Dance Clubs 🕺"),
-  cat.Category(id: "drinks", name: "Drinks 🍹"),
+  cat.Category(
+    id: "vegan",
+    searchType: "restaurant",
+    name: "Vegan 🌱",
+    searchText: "Vegan Restaurants",
+  ),
+  cat.Category(
+    id: "coffee",
+    searchType: "cafe",
+    name: "Coffee Shops ☕️",
+    searchText: "Cafes",
+  ),
+  cat.Category(
+    id: "coworking_spaces",
+    name: "Coworking Spaces 👨🏻‍💻",
+    searchText: "Coworking Spaces",
+    searchType: "office",
+  ),
+  cat.Category(
+    id: "dance",
+    name: "Dance Clubs 🕺",
+    searchType: "night_club",
+    searchText: "Dance Clubs",
+  ),
+  cat.Category(
+    id: "drinks",
+    searchType: "bar",
+    name: "Drinks 🍹",
+    searchText: "Bars",
+  ),
 ];

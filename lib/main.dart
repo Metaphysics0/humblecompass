@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:humblecompass/src/features/category_picker/application/handle_selected_category.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/category_picker/presentation/picker.dart';
+import 'package:humblecompass/src/features/enable_location_services/application/ensure_user_has_location_enabled.dart';
 import 'package:humblecompass/src/features/enable_location_services/application/get_user_location.dart';
 import 'package:humblecompass/src/features/enable_location_services/data/user_location.dart';
 import 'package:humblecompass/src/features/target_location/presentation/target_location_text.dart';
@@ -16,9 +17,8 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(home: HomePageState());
-  }
+  Widget build(BuildContext context) =>
+      const MaterialApp(home: HomePageState());
 }
 
 class HomePageState extends ConsumerStatefulWidget {
@@ -34,8 +34,13 @@ class HomePage extends ConsumerState<HomePageState> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ensureUserHasLocationEnabled();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final hasLocationEnabled = await ensureUserHasLocationEnabled();
+
+      if (hasLocationEnabled) {
+        final Position position = await getPosition();
+        ref.read(userPositionProvider.notifier).setPosition(position);
+      }
     });
   }
 

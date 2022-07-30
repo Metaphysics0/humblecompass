@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:humblecompass/src/constants/initial_selected_category_index.dart';
-import 'package:humblecompass/src/features/category_picker/application/handle_selected_category.dart';
+import 'package:humblecompass/src/features/category_picker/application/selected_category_provider.dart';
 import 'package:humblecompass/src/features/category_picker/data/categories.dart';
 
 // ignore: must_be_immutable
 class Picker extends ConsumerWidget {
-  CategorySelector categorySelector = CategorySelector();
-
   Picker({Key? key}) : super(key: key);
 
   @override

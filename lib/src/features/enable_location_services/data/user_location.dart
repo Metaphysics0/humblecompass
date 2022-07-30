@@ -4,24 +4,28 @@ import 'package:humblecompass/src/utils/future_helper.dart';
 
 class UserLocation {
   UserLocationErrors errors = UserLocationErrors();
-  FutureHelper futureHelper = FutureHelper();
 
-  Future<Position?> determinePosition() async {
-    return await Geolocator.getLastKnownPosition();
+  Future<Position?> getLastKnownPosition() async {
+    try {
+      return await Geolocator.getLastKnownPosition();
+    } catch (e) {
+      futureHelper.throwError(e.toString());
+      return null;
+    }
   }
 
-  Future<Future<Error?>?> ensureLocationIsEnabled() async {
+  Future<bool> ensureLocationIsEnabled() async {
     await _checkIfLocationIsEnabled();
     await _askForLocationPermissionsIfNeeded();
 
-    return null;
+    return true;
   }
 
   // ignore: body_might_complete_normally_nullable
   Future<bool?> _checkIfLocationIsEnabled() async {
     final isEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isEnabled) {
-      futureHelper.throwError(errors.disabledPermissions);
+      futureHelper.throwError(errors.disabled);
     }
   }
 
@@ -33,12 +37,12 @@ class UserLocation {
       permission = await Geolocator.requestPermission();
 
       if (permission == LocationPermission.denied) {
-        futureHelper.throwError(errors.deniedPermissions);
+        futureHelper.throwError(errors.denied);
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      futureHelper.throwError(errors.permanatelyDeniedPermissions);
+      futureHelper.throwError(errors.permanatelyDenied);
     }
   }
 }
