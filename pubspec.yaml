@@ -36,8 +36,8 @@ dependencies:
   flutter_compass: '^0.7.0'
 
   google_place: ^0.4.7
-  location: ^4.4.0
   geolocator: ^9.0.1
+  flutter_riverpod: ^1.0.4
 
 dev_dependencies:
   flutter_test:

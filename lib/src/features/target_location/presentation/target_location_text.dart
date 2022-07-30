@@ -1,28 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:humblecompass/src/features/target_location/application/fetch_target_location.dart';
-import 'package:humblecompass/src/features/target_location/application/fetch_target_location.dart';
-import 'package:humblecompass/src/features/target_location/data/google_api.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:humblecompass/main.dart';
+import 'package:humblecompass/src/features/category_picker/application/handle_selected_category.dart';
+import 'package:humblecompass/src/features/category_picker/domain/category.dart';
 
-class TargetLocationText extends StatefulWidget {
+class TargetLocationText extends ConsumerWidget {
   const TargetLocationText({Key? key}) : super(key: key);
 
   @override
-  State<TargetLocationText> createState() => _TargetLocationTextState();
-}
-
-class _TargetLocationTextState extends State<TargetLocationText> {
-  @override
-  Widget build(BuildContext context) {
-    Future onPressed() async {
-      var location = await fetchTargetLocation("restaurant", "restaurant");
-
-      print("LOCATION $location");
-    }
-
-    ;
-
-    return Text("Searching for nearby...");
+  Widget build(BuildContext context, WidgetRef ref) {
+    Category category = ref.watch(categoryProvider);
+    return Text(category.name);
   }
 }
