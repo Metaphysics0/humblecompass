@@ -10,10 +10,10 @@ Future<Position?> getCurrentPosition() async =>
 
 Stream<Position> getPositionStream() => userLocation.getPositionStream();
 
-final userPositionProvider = StreamProvider<String?>((ref) async* {
+final userPositionStreamProvider = StreamProvider<Position>((ref) async* {
   final stream = getPositionStream();
   await for (final position in stream) {
-    yield position.toString();
+    yield position;
   }
 });
 
