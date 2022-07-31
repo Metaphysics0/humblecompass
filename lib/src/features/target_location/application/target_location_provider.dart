@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:humblecompass/src/features/target_location/data/target_location.dart';
+import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
 
 final targetLocationProvider =
     StateNotifierProvider<TargetLocationNotifier, TargetLocation?>((ref) {

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/category_picker/application/selected_category_provider.dart';
 import 'package:humblecompass/src/features/target_location/application/target_location_provider.dart';
-import 'package:humblecompass/src/features/target_location/data/target_location.dart';
+import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
 import 'package:humblecompass/src/features/user_location/application/user_location_provider.dart';
 import 'package:humblecompass/src/styles/text_styles.dart';
 
@@ -41,6 +41,7 @@ Text _foundText(TargetLocation target, AsyncValue<Position> userPosition) {
     error: (err, stack) => Text('Error: $err'),
     loading: () => const Text("loading..."),
   );
+
   // if (userPosition == null) return _enableLocationServicesText(ref);
 
   double distanceInMeters =

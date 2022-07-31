@@ -1,5 +1,4 @@
-import 'package:geolocator/geolocator.dart';
-import 'package:humblecompass/src/features/target_location/data/position.dart';
+import 'package:humblecompass/src/features/target_location/domain/position.dart';
 
 class TargetLocation extends GlobalPosition {
   final String? name;

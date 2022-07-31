@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/constants/initial_selected_category_index.dart';
@@ -21,6 +23,9 @@ class CategorySelector extends StateNotifier<Category> {
   select(Category category) async {
     final Position? userPosition = await getCurrentPosition();
     final targetResult = await fetchTargetLocation(userPosition!, category);
+    // print('RESULT: $targetResult');
+    inspect(targetResult);
+
     await ref
         .read(targetLocationProvider.notifier)
         .setTargetLocation(targetResult);
