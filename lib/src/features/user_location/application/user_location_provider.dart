@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/user_location/data/user_location.dart';
-import 'package:humblecompass/src/utils/future_helper.dart';
 
 UserLocation userLocation = UserLocation();
 
@@ -18,3 +17,17 @@ final userPositionStreamProvider = StreamProvider<Position>((ref) async* {
 });
 
 listenToPosition() => userLocation.listenToPosition();
+
+final lastKnownPositionProvider =
+    StateNotifierProvider<LastKnownPositionNotifier, Position?>((ref) {
+  return LastKnownPositionNotifier(ref);
+});
+
+class LastKnownPositionNotifier extends StateNotifier<Position?> {
+  LastKnownPositionNotifier(this.ref) : super(null);
+  Ref ref;
+
+  setPosition(Position? pos) {
+    state = pos;
+  }
+}

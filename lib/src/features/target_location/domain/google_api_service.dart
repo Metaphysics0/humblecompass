@@ -33,16 +33,27 @@ class GoogleApiService {
     }
   }
 
-  TargetLocation processNearbySearchResponse(NearBySearchResponse? response) {
+  TargetLocation? processNearbySearchResponse(NearBySearchResponse? response) {
     final result = response?.results!.first;
+    if (result == null) {
+      futureHelper.throwError('No results found');
+      return null;
+    }
+
+    if (result.geometry?.location == null) {
+      return TargetLocationWithoutCoordinates(
+        name: result.name,
+        address: result.formattedAddress,
+      );
+    }
 
     return TargetLocation(
-      longitude: result?.geometry?.location?.lng,
-      latitude: result?.geometry?.location?.lat,
-      name: result?.name,
-      address: result?.formattedAddress,
-      priceLevel: result?.priceLevel,
-      rating: result?.userRatingsTotal,
+      longitude: result.geometry?.location?.lng ?? 0.0,
+      latitude: result.geometry?.location?.lat ?? 0.0,
+      name: result.name,
+      address: result.formattedAddress,
+      priceLevel: result.priceLevel,
+      rating: result.userRatingsTotal,
     );
   }
 }

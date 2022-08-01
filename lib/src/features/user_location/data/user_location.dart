@@ -34,10 +34,8 @@ class UserLocation {
     return Geolocator.getPositionStream(locationSettings: locationSettings);
   }
 
-  void listenToPosition() {
-    getPositionStream().listen((Position? position) {
-      printPositionText(position);
-    });
+  Position? listenToPosition() {
+    getPositionStream().listen((Position? pos) => print("position: $pos"));
   }
 
   void printPositionText(Position? position) {

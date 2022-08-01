@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/category_picker/presentation/picker.dart';
-import 'package:humblecompass/src/features/target_location/presentation/target_location_text.dart';
+import 'package:humblecompass/src/features/target_location/presentation/target_location_text/view.dart';
 import 'package:humblecompass/src/features/user_location/application/ensure_user_has_location_enabled.dart';
 import 'package:humblecompass/src/features/user_location/application/user_location_provider.dart';
 import 'package:humblecompass/src/features/user_location/data/user_location.dart';
@@ -39,7 +39,12 @@ class HomePage extends ConsumerState<HomePageState> {
 
       if (hasLocationEnabled) {
         final Position? currentPosition = await getCurrentPosition();
-        print("CURRENT POSITION: $currentPosition");
+
+        if (currentPosition is Position) {
+          ref
+              .read(lastKnownPositionProvider.notifier)
+              .setPosition(currentPosition);
+        }
       }
     });
   }
@@ -55,7 +60,7 @@ class HomePage extends ConsumerState<HomePageState> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+              children: const [
                 TargetLocationText(),
                 Picker(),
               ],
