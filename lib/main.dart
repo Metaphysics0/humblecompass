@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:humblecompass/src/features/category_picker/presentation/picker.dart';
+import 'package:humblecompass/src/features/category_picker/presentation/picker/picker.dart';
 import 'package:humblecompass/src/features/target_location/presentation/compass/view.dart';
 import 'package:humblecompass/src/features/target_location/presentation/target_location_text/view.dart';
 import 'package:humblecompass/src/features/user_location/application/ensure_user_has_location_enabled.dart';

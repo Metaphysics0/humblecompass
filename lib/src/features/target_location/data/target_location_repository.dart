@@ -1,21 +1,20 @@
-import 'dart:developer';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 import 'package:humblecompass/config/env.dart';
 import 'package:humblecompass/src/features/category_picker/domain/category.dart';
+import 'package:humblecompass/src/features/target_location/data/target_location_dto.dart';
 import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
 import 'package:humblecompass/src/utils/future_helper.dart';
 
 class GoogleApiService {
-  final GooglePlace googlePlace = GooglePlace(appEnv.googlePlacesApiKey);
+  static GooglePlace googlePlaceApi = GooglePlace(appEnv.googlePlacesApiKey);
 
-  Future<TargetLocation?> fetchTargetLocation(
+  Future<List<TargetLocation?>?> fetchNearbyPlaces(
     Position userPosition,
     Category targetCategory,
   ) async {
     try {
-      final response = await googlePlace.search.getNearBySearch(
+      final response = await googlePlaceApi.search.getNearBySearch(
         Location(
           lat: userPosition.latitude,
           lng: userPosition.longitude,
@@ -26,35 +25,12 @@ class GoogleApiService {
         rankby: RankBy.Distance,
         opennow: true,
       );
+
       return processNearbySearchResponse(response);
     } catch (e) {
       futureHelper.throwError(e.toString());
       return null;
     }
-  }
-
-  TargetLocation? processNearbySearchResponse(NearBySearchResponse? response) {
-    final result = response?.results!.first;
-    if (result == null) {
-      futureHelper.throwError('No results found');
-      return null;
-    }
-
-    if (result.geometry?.location == null) {
-      return TargetLocationWithoutCoordinates(
-        name: result.name,
-        address: result.formattedAddress,
-      );
-    }
-
-    return TargetLocation(
-      longitude: result.geometry?.location?.lng ?? 0.0,
-      latitude: result.geometry?.location?.lat ?? 0.0,
-      name: result.name,
-      address: result.formattedAddress,
-      priceLevel: result.priceLevel,
-      rating: result.userRatingsTotal,
-    );
   }
 }
 

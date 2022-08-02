@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:humblecompass/src/constants/initial_selected_category_index.dart';
-import 'package:humblecompass/src/features/category_picker/application/selected_category_provider.dart';
 import 'package:humblecompass/src/features/category_picker/data/categories.dart';
+import 'package:humblecompass/src/features/category_picker/presentation/picker/picker_controller.dart';
 
 // ignore: must_be_immutable
 class Picker extends ConsumerWidget {
@@ -10,6 +12,8 @@ class Picker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Timer? debounce;
+
     return SizedBox(
       height: 275,
       child: CupertinoPicker(
@@ -20,18 +24,15 @@ class Picker extends ConsumerWidget {
         ),
         useMagnifier: true,
         onSelectedItemChanged: (int selectedItem) {
-          _onSelectedItemChanged(ref, selectedItem);
+          if (debounce?.isActive ?? false) debounce?.cancel();
+          debounce = Timer(DEBOUNCE_DURATION, () {
+            onPick(ref, selectedItem);
+          });
         },
         children: categoryList,
       ),
     );
   }
-}
-
-void _onSelectedItemChanged(WidgetRef ref, int selectedItem) {
-  ref
-      .read(categoryProvider.notifier)
-      .select(AVAILABLE_CATEGORIES[selectedItem]);
 }
 
 final List<Widget> categoryList = List<Widget>.generate(

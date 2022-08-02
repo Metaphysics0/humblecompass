@@ -1,8 +1,10 @@
 // an interface to communicate between the user's location and google API
 
-class GlobalPosition {
-  final double latitude;
-  final double longitude;
+import 'package:geolocator/geolocator.dart';
+
+abstract class GlobalPosition {
+  double latitude = 0.0;
+  double longitude = 0.0;
   final double? altitude;
 
   GlobalPosition({
@@ -10,4 +12,13 @@ class GlobalPosition {
     required this.longitude,
     this.altitude,
   });
+
+  double distanceBetween(Position target) {
+    return Geolocator.distanceBetween(
+      latitude,
+      longitude,
+      target.latitude,
+      target.longitude,
+    );
+  }
 }

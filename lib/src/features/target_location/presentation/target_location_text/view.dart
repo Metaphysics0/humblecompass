@@ -14,11 +14,15 @@ class TargetLocationText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<Position> userPositionStream =
         ref.watch(userPositionStreamProvider);
-    final TargetLocation? targetLocation = ref.watch(targetLocationProvider);
+    final targetLocations = ref.watch(targetLocationProvider);
+
     final Position? lastKnownPosition = ref.watch(lastKnownPositionProvider);
 
-    return (targetLocation == null)
+    if (targetLocations!.isEmpty) {
+      return const Text("asdfasdf");
+    }
+    return (targetLocations == [])
         ? searchText(ref)
-        : foundText(targetLocation, userPositionStream, lastKnownPosition);
+        : foundText(targetLocations, userPositionStream, lastKnownPosition);
   }
 }
