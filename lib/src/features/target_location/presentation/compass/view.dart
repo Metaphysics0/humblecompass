@@ -7,6 +7,6 @@ class Compass extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return buildCompass();
+    return buildCompass(ref);
   }
 }

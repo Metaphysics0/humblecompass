@@ -2,18 +2,17 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:humblecompass/src/features/target_location/application/bearing_provider.dart';
 import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
 import 'package:humblecompass/src/features/target_location/presentation/target_location_text/next_button.dart';
 import 'package:humblecompass/src/features/category_picker/application/selected_category_provider.dart';
+import 'package:humblecompass/src/features/user_location/application/user_location_provider.dart';
 import 'package:humblecompass/src/styles/text_styles.dart';
 import 'package:humblecompass/src/utils/distance_helper.dart';
 
-Widget getFoundText(
-  List<TargetLocation?>? targetLocations,
-  AsyncValue<Position> userPositionStream,
-  Position? lastKnownPosition,
-) {
-  final AsyncValue<Position?> userPosition = userPositionStream;
+Widget getFoundText(List<TargetLocation?>? targetLocations, WidgetRef ref) {
+  AsyncValue<Position> userPositionStream =
+      ref.watch(userPositionStreamProvider);
 
   if (targetLocations!.isEmpty) {
     return const Text("No target location found");
@@ -22,13 +21,11 @@ Widget getFoundText(
   TargetLocation? target =
       targetLocations.isNotEmpty ? targetLocations.first : null;
 
-  return userPosition.when(
+  return userPositionStream.when(
     data: (userPosition) {
-      final distance = _getDistanceFromTarget(
-        target,
-        userPosition,
-        lastKnownPosition,
-      );
+      final distance = _getDistanceFromTarget(target, userPosition);
+      // final bearing = _getBearingFromTarget(target, userPosition);
+      // ref.watch(bearingProvider.notifier).setBearing(bearing);
 
       final searchText = Text(
         "${target?.name} $distance away!",
@@ -70,7 +67,6 @@ AnimatedTextKit getIsSearchingText(WidgetRef ref) {
 String _getDistanceFromTarget(
   TargetLocation? target,
   Position? userPosition,
-  Position? lastKnownPosition,
 ) {
   try {
     if (target == null || userPosition == null) {
@@ -84,5 +80,21 @@ String _getDistanceFromTarget(
   } catch (e) {
     print("Error getting distance from target: $e");
     return "0.0";
+  }
+}
+
+double _getBearingFromTarget(
+  TargetLocation? target,
+  Position? userPosition,
+) {
+  try {
+    if (target == null || userPosition == null) {
+      return 0.0;
+    }
+
+    return distanceHelper.bearingBetween(userPosition, target);
+  } catch (e) {
+    print("Error getting bearing from target: $e");
+    return 0.0;
   }
 }

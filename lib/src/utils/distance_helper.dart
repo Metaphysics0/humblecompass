@@ -16,6 +16,15 @@ class DistanceHelper {
       target.longitude,
     );
   }
+
+  double bearingBetween(Position currentPosition, TargetLocation target) {
+    return Geolocator.bearingBetween(
+      currentPosition.latitude,
+      currentPosition.longitude,
+      target.latitude,
+      target.longitude,
+    );
+  }
 }
 
 final DistanceHelper distanceHelper = DistanceHelper();

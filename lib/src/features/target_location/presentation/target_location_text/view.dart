@@ -11,17 +11,12 @@ class TargetLocationText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<Position> userPositionStream =
-        ref.watch(userPositionStreamProvider);
     AsyncValue<List<TargetLocation?>?> targetLocations =
         ref.watch(futureTargetLocationsProvider);
-
-    final Position? lastKnownPosition = ref.watch(lastKnownPositionProvider);
 
     return targetLocations.when(
         loading: () => getIsSearchingText(ref),
         error: ((error, stackTrace) => Text("Error: $error")),
-        data: (targetLocations) => getFoundText(
-            targetLocations, userPositionStream, lastKnownPosition));
+        data: (targetLocations) => getFoundText(targetLocations, ref));
   }
 }

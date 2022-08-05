@@ -58,10 +58,10 @@ class HomePage extends ConsumerState<HomePageState> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Compass(),
                 TargetLocationText(),
                 Picker(),

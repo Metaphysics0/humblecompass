@@ -20,10 +20,6 @@ class TargetLocationNotifier extends StateNotifier<List<TargetLocation?>?> {
   }
 }
 
-// final futureTargetLocation = Provider<GoogleApiService>(
-//   (ref) => GoogleApiService(),
-// );
-
 final futureTargetLocationsProvider =
     FutureProvider<List<TargetLocation?>?>((ref) async {
   final selectedCategory = ref.watch(categoryProvider);
