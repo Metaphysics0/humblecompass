@@ -4,9 +4,9 @@ import 'package:humblecompass/src/features/target_location/domain/target_locatio
 class DistanceHelper {
   double format(double distance) => (distance < 1) ? distance * 1000 : distance;
 
-  String prettyPrint(double distance) => (distance < 1)
-      ? '${(distance * 1000).toStringAsFixed(0)}m'
-      : '${distance.toStringAsFixed(2)}km';
+  String prettyPrint(double distance) => (distance / 1000 < 1)
+      ? '${distance.toStringAsFixed(1)} meters'
+      : '${(distance / 1000).toStringAsFixed(1)} km';
 
   double distanceInMeters(Position currentPosition, TargetLocation target) {
     return Geolocator.distanceBetween(

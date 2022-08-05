@@ -5,5 +5,5 @@ import 'package:humblecompass/src/features/user_location/application/user_locati
 
 fetchTargetLocation(Category selectedCategory) async {
   final Position? userPosition = await getCurrentPosition();
-  return await fetchNearbyPlaces(userPosition!, selectedCategory);
+  return await fetchNearbyPlaces(userPosition, selectedCategory);
 }

@@ -10,10 +10,15 @@ class GoogleApiService {
   static GooglePlace googlePlaceApi = GooglePlace(appEnv.googlePlacesApiKey);
 
   Future<List<TargetLocation?>?> fetchNearbyPlaces(
-    Position userPosition,
+    Position? userPosition,
     Category targetCategory,
   ) async {
     try {
+      if (userPosition == null) {
+        futureHelper.throwError("Unable to get your current location");
+        return null;
+      }
+
       final response = await googlePlaceApi.search.getNearBySearch(
         Location(
           lat: userPosition.latitude,

@@ -27,8 +27,7 @@ class UserLocation {
 
   Stream<Position> getPositionStream() {
     const LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
+      accuracy: LocationAccuracy.bestForNavigation,
     );
 
     return Geolocator.getPositionStream(locationSettings: locationSettings);

@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/target_location/application/target_location_provider.dart';
 import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
-import 'package:humblecompass/src/features/target_location/presentation/target_location_text/found_text.dart';
-import 'package:humblecompass/src/features/target_location/presentation/target_location_text/search_text.dart';
+import 'package:humblecompass/src/features/target_location/presentation/target_location_text/target_location_text_controller.dart';
 import 'package:humblecompass/src/features/user_location/application/user_location_provider.dart';
 
 class TargetLocationText extends ConsumerWidget {
@@ -14,15 +13,15 @@ class TargetLocationText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<Position> userPositionStream =
         ref.watch(userPositionStreamProvider);
-    final targetLocations = ref.watch(targetLocationProvider);
+    AsyncValue<List<TargetLocation?>?> targetLocations =
+        ref.watch(futureTargetLocationsProvider);
 
     final Position? lastKnownPosition = ref.watch(lastKnownPositionProvider);
 
-    if (targetLocations!.isEmpty) {
-      return const Text("asdfasdf");
-    }
-    return (targetLocations == [])
-        ? searchText(ref)
-        : foundText(targetLocations, userPositionStream, lastKnownPosition);
+    return targetLocations.when(
+        loading: () => getIsSearchingText(ref),
+        error: ((error, stackTrace) => Text("Error: $error")),
+        data: (targetLocations) => getFoundText(
+            targetLocations, userPositionStream, lastKnownPosition));
   }
 }
