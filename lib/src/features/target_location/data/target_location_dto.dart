@@ -19,7 +19,8 @@ List<TargetLocation?> processNearbySearchResponse(
             name: place.name ?? "Name not found",
             address: place.formattedAddress ?? "Address not found",
             priceLevel: place.priceLevel,
-            rating: place.userRatingsTotal,
+            rating: place.rating ?? 0.0,
+            userRatingTotal: place.userRatingsTotal,
           ))
       .toList();
 }

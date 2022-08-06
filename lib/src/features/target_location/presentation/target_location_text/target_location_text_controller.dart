@@ -12,12 +12,11 @@ import 'package:humblecompass/src/utils/distance_helper.dart';
 
 Widget getFoundText(List<TargetLocation?>? targetLocations, WidgetRef ref) {
   final userPositionStream = ref.watch(userPositionStreamProvider);
+  final selectedCategory = ref.watch(categoryProvider);
 
   if (targetLocations!.isEmpty) {
-    final selectedCategory = ref.watch(categoryProvider);
-
     return Text(
-      "No nearby ${selectedCategory.searchText.toLowerCase()} found 😭 ${selectedCategory.icon}",
+      "No nearby ${selectedCategory.searchText.toLowerCase()} found 😭",
     );
   }
 
@@ -35,22 +34,36 @@ Widget getFoundText(List<TargetLocation?>? targetLocations, WidgetRef ref) {
         style: textStyles.search,
       );
 
-      final List<Widget> containerChildren = [
-        searchText,
+      final List<Widget> distanceText = [
+        Text(
+          "only $distance away! 🚶🏻‍♂️",
+          style: textStyles.search,
+        ),
       ];
 
-      if (_shouldShowNextButton(targetLocations)) {
-        containerChildren.add(nextButton(targetLocations));
-      }
+      // if (_shouldShowNextButton(targetLocations)) {
+      //   distanceText.add(nextButton(targetLocations));
+      // }
 
-      return createView(containerChildren);
+      return Column(
+        children: [
+          Text(
+            "${target?.name}",
+            style: textStyles.search,
+          ),
+          target?.getRatingStars(selectedCategory) ?? Container(),
+          createDistanceText(distanceText)
+        ],
+      );
+
+      // return createDistanceText(distanceText);
     },
     error: ((error, stackTrace) => Text("Error: $error")),
     loading: () => const Text("Loading..."),
   );
 }
 
-Flex createView(List<Widget> containerChildren) => Flex(
+Flex createDistanceText(List<Widget> containerChildren) => Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,9 +110,7 @@ double _getBearingFromTarget(
   Position? userPosition,
 ) {
   try {
-    if (target == null || userPosition == null) {
-      return 0.0;
-    }
+    if (target == null || userPosition == null) return 0.0;
 
     return distanceHelper.bearingBetween(userPosition, target);
   } catch (e) {

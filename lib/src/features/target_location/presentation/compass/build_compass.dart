@@ -74,9 +74,8 @@ SizedBox _defaultCompass(direction, {double bearing = 0.0}) => SizedBox(
     );
 
 double _calculateBearing(double direction, {double bearing = 0.0}) {
-  if (bearing == 0.0) {
-    return (direction * (math.pi / 180) * -1);
-  }
+  double defaultBearing = (direction * (math.pi / 180) * -1);
+  if (bearing == 0.0) defaultBearing;
 
-  return (direction * ((math.pi / 180) * -1) - bearing * (math.pi / 180) * -1);
+  return defaultBearing - bearing * (math.pi / 180) * -1;
 }

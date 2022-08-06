@@ -63,7 +63,10 @@ class HomePage extends ConsumerState<HomePageState> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Compass(),
-                TargetLocationText(),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: TargetLocationText(),
+                ),
                 Picker(),
               ],
             )

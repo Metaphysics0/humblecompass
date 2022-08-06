@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
 class Category {
   final String id;
   final String name;
   final String searchText;
   final String searchType;
-  final String icon;
+  final Icon icon;
   bool? disabled = false;
 
   Category({

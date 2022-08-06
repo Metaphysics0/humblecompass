@@ -42,6 +42,7 @@ dependencies:
   # State management
   flutter_riverpod: ^1.0.4
   rxdart: ^0.27.5
+  flutter_rating_bar: ^4.0.1
 
   animated_text_kit: ^4.2.2
 
