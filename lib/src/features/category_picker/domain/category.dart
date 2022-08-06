@@ -3,6 +3,7 @@ class Category {
   final String name;
   final String searchText;
   final String searchType;
+  final String icon;
   bool? disabled = false;
 
   Category({
@@ -10,6 +11,7 @@ class Category {
     required this.name,
     required this.searchText,
     required this.searchType,
+    required this.icon,
     this.disabled,
   });
 }

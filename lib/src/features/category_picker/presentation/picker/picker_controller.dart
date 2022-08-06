@@ -10,7 +10,7 @@ void onPick(WidgetRef ref, int selectedCategoryIdx) async {
   final Category selectedCategory = AVAILABLE_CATEGORIES[selectedCategoryIdx];
   setCurrentCategory(ref, selectedCategory);
 
-  final targetLocations = await fetchTargetLocation(selectedCategory);
+  final targetLocations = await fetchTargetLocations(selectedCategory);
   setTargetLocations(ref, targetLocations);
 }
 

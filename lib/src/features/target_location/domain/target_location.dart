@@ -1,4 +1,6 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:humblecompass/src/features/target_location/domain/position.dart';
+import 'package:humblecompass/src/utils/distance_helper.dart';
 
 class TargetLocation extends GlobalPosition {
   final String name;
@@ -6,25 +8,21 @@ class TargetLocation extends GlobalPosition {
   final int? rating;
   final String? phone;
   final int? priceLevel;
+  double? bearing = 0.0;
 
   TargetLocation({
     required super.longitude,
     required super.latitude,
     required this.name,
     required this.address,
+    this.bearing,
     this.priceLevel,
     this.phone,
     this.rating,
     super.altitude,
   });
-}
 
-class TargetLocationWithoutCoordinates extends TargetLocation {
-  TargetLocationWithoutCoordinates({
-    required super.name,
-    required super.address,
-    super.priceLevel,
-    super.phone,
-    super.rating,
-  }) : super(latitude: 0.0, longitude: 0.0);
+  double bearingTo(Position other) {
+    return distanceHelper.bearingBetween(other, this);
+  }
 }

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:humblecompass/src/features/target_location/application/bearing_provider.dart';
 import 'dart:math' as math;
 
 import 'package:humblecompass/src/features/target_location/application/target_location_provider.dart';
 import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
-import 'package:humblecompass/src/utils/distance_helper.dart';
-import 'package:sensors_plus/sensors_plus.dart';
 
 Widget buildCompass(WidgetRef ref) {
   return StreamBuilder<CompassEvent>(
@@ -34,40 +31,52 @@ Widget buildCompass(WidgetRef ref) {
       AsyncValue<List<TargetLocation?>?> targetLocations =
           ref.watch(futureTargetLocationsProvider);
 
-      late final double bearing;
-      late final double orientation;
-
-      gyroscopeEvents.listen((GyroscopeEvent event) {
-        // print('gyroscope event: $event.x');
-        // if (orientation != event.x) {
-        //   orientation = event.x;
-        // }
-      });
-
-      targetLocations.when(
-        data: (data) {
-          // bearing = ref.watch(bearingProvider);
-        },
-        error: ((error, stackTrace) => print("Error: $error")),
-        loading: () => print("LOADING"),
-      );
-
-      return Container(
-        height: 400,
-        child: Transform.rotate(
-          angle: (direction * (math.pi / 180) * -1),
-          child: Stack(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
-                child: Image.asset('assets/carrot.png'),
-              ),
-            ],
-          ),
+      return targetLocations.when(
+        loading: () => _defaultCompass(direction),
+        error: ((error, stackTrace) => _defaultCompass(direction)),
+        data: (targetLocations) => _compassWithTargetLocation(
+          targetLocations,
+          direction,
         ),
       );
     },
   );
+}
+
+_compassWithTargetLocation(
+  List<TargetLocation?>? targetLocations,
+  double? direction,
+) {
+  if (targetLocations!.isEmpty) {
+    return _defaultCompass(direction);
+  }
+  TargetLocation? target = targetLocations.first;
+  double? bearing = target?.bearing;
+
+  return _defaultCompass(direction, bearing: bearing ?? 0.0);
+}
+
+SizedBox _defaultCompass(direction, {double bearing = 0.0}) => SizedBox(
+      height: 400,
+      child: Transform.rotate(
+        angle: _calculateBearing(direction, bearing: bearing),
+        child: Stack(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
+              child: Image.asset('assets/carrot.png'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+double _calculateBearing(double direction, {double bearing = 0.0}) {
+  if (bearing == 0.0) {
+    return (direction * (math.pi / 180) * -1);
+  }
+
+  return (direction * ((math.pi / 180) * -1) - bearing * (math.pi / 180) * -1);
 }

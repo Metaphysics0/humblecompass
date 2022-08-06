@@ -11,6 +11,7 @@ Stream<Position> getPositionStream() => userLocation.getPositionStream();
 
 final userPositionStreamProvider = StreamProvider<Position>((ref) async* {
   final stream = getPositionStream();
+
   await for (final position in stream) {
     yield position;
   }

@@ -11,5 +11,6 @@ Future<List<TargetLocation?>?> fetchNearbyPlaces(
     userPosition,
     targetCategory,
   );
+
   return targetLocationResponse;
 }

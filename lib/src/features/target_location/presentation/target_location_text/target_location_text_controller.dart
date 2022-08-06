@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:humblecompass/src/features/target_location/application/bearing_provider.dart';
+
 import 'package:humblecompass/src/features/target_location/domain/target_location.dart';
 import 'package:humblecompass/src/features/target_location/presentation/target_location_text/next_button.dart';
 import 'package:humblecompass/src/features/category_picker/application/selected_category_provider.dart';
@@ -11,11 +11,14 @@ import 'package:humblecompass/src/styles/text_styles.dart';
 import 'package:humblecompass/src/utils/distance_helper.dart';
 
 Widget getFoundText(List<TargetLocation?>? targetLocations, WidgetRef ref) {
-  AsyncValue<Position> userPositionStream =
-      ref.watch(userPositionStreamProvider);
+  final userPositionStream = ref.watch(userPositionStreamProvider);
 
   if (targetLocations!.isEmpty) {
-    return const Text("No target location found");
+    final selectedCategory = ref.watch(categoryProvider);
+
+    return Text(
+      "No nearby ${selectedCategory.searchText.toLowerCase()} found 😭 ${selectedCategory.icon}",
+    );
   }
 
   TargetLocation? target =
@@ -23,19 +26,22 @@ Widget getFoundText(List<TargetLocation?>? targetLocations, WidgetRef ref) {
 
   return userPositionStream.when(
     data: (userPosition) {
+      print("USER POSITION: $userPosition");
       final distance = _getDistanceFromTarget(target, userPosition);
-      // final bearing = _getBearingFromTarget(target, userPosition);
-      // ref.watch(bearingProvider.notifier).setBearing(bearing);
+      target?.bearing = _getBearingFromTarget(target, userPosition);
 
       final searchText = Text(
-        "${target?.name} $distance away!",
+        "${target?.name} is only $distance away!",
         style: textStyles.search,
       );
 
-      final containerChildren = [
+      final List<Widget> containerChildren = [
         searchText,
-        nextButton(targetLocations),
       ];
+
+      if (_shouldShowNextButton(targetLocations)) {
+        containerChildren.add(nextButton(targetLocations));
+      }
 
       return createView(containerChildren);
     },
@@ -82,6 +88,9 @@ String _getDistanceFromTarget(
     return "0.0";
   }
 }
+
+bool _shouldShowNextButton(List<TargetLocation?>? targetLocations) =>
+    targetLocations!.length > 1;
 
 double _getBearingFromTarget(
   TargetLocation? target,
